@@ -27,11 +27,13 @@
 #include <yarp/sig/Vector.h>
 
 #include <yarp/math/Math.h>
-#include <iCub/ctrl/math.h>
+//#include <iCub/ctrl/math.h>
+#include <cmath>
 
 #include "Int16.h"
 #include "VIZZYARMROUTINES_IDL.h"
 
+#define CTRL_RAD2DEG 180.0/M_PI;
 using namespace yarp::os;
 using namespace std;
 using namespace yarp::dev;

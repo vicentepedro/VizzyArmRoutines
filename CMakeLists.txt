@@ -17,7 +17,7 @@ list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
 include(YarpIDL)
 set(IDL_GENERATED_CODE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 yarp_idl_to_dir(${PROJECTNAME}.thrift ${IDL_GENERATED_CODE_DIR})
-
+add_definitions(-D_USE_MATH_DEFINES)
 include(YarpInstallationHelpers)
 
 file(GLOB source src/*.cpp)

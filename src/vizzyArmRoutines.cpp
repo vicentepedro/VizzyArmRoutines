@@ -9,13 +9,15 @@
  *
  */
 
+
+// Velocity - 10,21,***, j4=30
 #include "vizzyArmRoutines.h"
 #include "Int16.h"
 
 using namespace yarp::os;
 using namespace std;
 using namespace yarp::math;
-using namespace iCub::ctrl;
+//using namespace iCub::ctrl;
 
 // VizzyArmRoutines Module
 double VizzyArmRoutines::getPeriod() {
@@ -126,7 +128,7 @@ bool VizzyArmRoutines::updateModule() {
 //    if(commandPort.getInputCount()<=0)
 //        return true;
 
-    commandreceived = command_sub.read();
+    commandreceived = command_sub.read(false);
     bool done = false;
     if (commandreceived!=NULL) {
         cout << "I received command" << commandreceived->data << endl;
@@ -156,7 +158,7 @@ bool VizzyArmRoutines::updateModule() {
                         pos->positionMove(command.data());
                         cout << "right" << endl;
                     }
-                    Time::delay(1.2);
+                    Time::delay(0.6);
                 }
                 command=home_pose;
                 pos->positionMove(command.data());
