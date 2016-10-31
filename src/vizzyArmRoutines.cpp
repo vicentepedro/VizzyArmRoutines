@@ -1,23 +1,19 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
 /*
- * Copyright: (C) 2012-2015 POETICON++, European Commission FP7 project ICT-288382
  * Copyright: (C) 2016 VisLab, Institute for Systems and Robotics,
  *                Instituto Superior Técnico, Universidade de Lisboa, Lisbon, Portugal
- * Author: Pedro Vicente <pvicente@isr.ist.utl.pt>
- * CopyPolicy: Released under the terms of the GNU GPL v2.0
+ * Author: Pedro Vicente <pvicente@isr.tecnico.ulisboa.pt>
+ * CopyPolicy: Released under the terms of the GNU GPL v3.0
  *
  */
 
-
-// Velocity - 10,21,***, j4=30
 #include "vizzyArmRoutines.h"
 #include "Int16.h"
 
 using namespace yarp::os;
 using namespace std;
 using namespace yarp::math;
-//using namespace iCub::ctrl;
 
 // VizzyArmRoutines Module
 double VizzyArmRoutines::getPeriod() {
@@ -41,9 +37,11 @@ bool VizzyArmRoutines::attach(RpcServer &source)
 bool VizzyArmRoutines::configure(yarp::os::ResourceFinder &rf) {
     _closing = false;
     /* module name */
+	Vector tmp;
     moduleName = rf.check("name", Value("vizzyArmRoutines"),
                           "Module name (string)").asString();
     robotName = rf.check("robot", Value("vizzy"),"Robot name (string)").asString();
+	armName = rf.check("arm", Value("right"),"Arm name (string)").asString();
     setName(moduleName.c_str());
 
     /* port names */
@@ -67,9 +65,11 @@ bool VizzyArmRoutines::configure(yarp::os::ResourceFinder &rf) {
     options.put("robot",robotName.c_str());
     std::string remotePorts="/";
     remotePorts+=robotName;
-    remotePorts+="/right_shoulder_arm";
+	remotePorts+="/";
+	remotePorts+=armName;
+    remotePorts+="_shoulder_arm";
 
-    std::string localPorts="/" + moduleName + "/controller/rightArm";
+    std::string localPorts="/" + moduleName + "/controller/" + armName + "SArm";
     options.put("device", "remote_controlboard");
     options.put("local", localPorts.c_str());           //local port names
     options.put("remote", remotePorts.c_str());         //where we connect to
@@ -90,9 +90,18 @@ bool VizzyArmRoutines::configure(yarp::os::ResourceFinder &rf) {
     }
     int nj=0;
     pos->getAxes(&nj);
+	tmp.resize(nj);
     // Setting Control Mode - Position
     for(int i=0;i< nj;i++)
         ictrl->setControlMode(i,VOCAB_CM_POSITION);
+	// Setting Motor Velocities
+	for (int i=0;i< nj;i++)
+	    tmp[i] = 21.0;
+    }
+	pos->setRefSpeeds(tmp.data());
+	// 
+	pos->setRefSpeed(0,10.0); // shoulder
+	pos->setRefSpeed(4,30.0); // prosupination - wave joint
 
     cout << "Module Started! YEEE" << endl;
     // Definition of Poses
@@ -106,6 +115,7 @@ bool VizzyArmRoutines::configure(yarp::os::ResourceFinder &rf) {
             cout << "." << endl;
     }
     home_pose = encoders;
+
     // Case 1
     wave_home_pose = home_pose; // To be sure the fingers don't change
     wave_home_pose[0] =-0.0460945*CTRL_RAD2DEG;
@@ -118,6 +128,8 @@ bool VizzyArmRoutines::configure(yarp::os::ResourceFinder &rf) {
     wave_home_pose[7] = -0.260872*CTRL_RAD2DEG;
 
     // Case 2
+
+	// TO BE IMPLEMENTED
     return true;
 }
 
@@ -138,9 +150,6 @@ bool VizzyArmRoutines::updateModule() {
 
                 command = wave_home_pose;
                 pos->positionMove(command.data());
-                cout << "home_pose" << home_pose.toString().c_str() <<endl;
-                cout << "command" << command.toString().c_str() <<endl;
-                cout << "wave_home_pose" << wave_home_pose.toString().c_str() <<endl;
                 while(!done) {
                     pos->checkMotionDone(&done);
                     Time::delay(0.00001);   // Alterado

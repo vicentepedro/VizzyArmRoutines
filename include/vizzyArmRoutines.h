@@ -1,11 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
 /*
- * Copyright: (C) 2012-2015 POETICON++, European Commission FP7 project ICT-288382
  * Copyright: (C) 2016 VisLab, Institute for Systems and Robotics,
  *                Instituto Superior Técnico, Universidade de Lisboa, Lisbon, Portugal
- * Author: Pedro Vicente <pvicente@isr.ist.utl.pt>
- * CopyPolicy: Released under the terms of the GNU GPL v2.0
+ * Author: Pedro Vicente <pvicente@isr.tecnico.ulisboa.pt>
+ * CopyPolicy: Released under the terms of the GNU GPL v3.0
  *
  */
 
@@ -27,7 +26,6 @@
 #include <yarp/sig/Vector.h>
 
 #include <yarp/math/Math.h>
-//#include <iCub/ctrl/math.h>
 #include <cmath>
 
 #include "Int16.h"
