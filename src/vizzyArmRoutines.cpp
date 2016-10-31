@@ -14,7 +14,7 @@
 using namespace yarp::os;
 using namespace std;
 using namespace yarp::math;
-
+using namespace yarp::sig;
 // VizzyArmRoutines Module
 double VizzyArmRoutines::getPeriod() {
     return 0.0;
@@ -97,7 +97,6 @@ bool VizzyArmRoutines::configure(yarp::os::ResourceFinder &rf) {
 	// Setting Motor Velocities
 	for (int i=0;i< nj;i++)
 	    tmp[i] = 21.0;
-    }
 	pos->setRefSpeeds(tmp.data());
 	// 
 	pos->setRefSpeed(0,10.0); // shoulder

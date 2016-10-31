@@ -32,6 +32,7 @@
 #include "VIZZYARMROUTINES_IDL.h"
 
 #define CTRL_RAD2DEG 180.0/M_PI;
+
 using namespace yarp::os;
 using namespace std;
 using namespace yarp::dev;
@@ -39,6 +40,7 @@ using namespace yarp::dev;
 class VizzyArmRoutines: public RFModule, public VIZZYARMROUTINES_IDL {
     string moduleName;
     string robotName;
+    string armName;
     /*Name of ports to be open*/
     string commandPortName, handlerPortName;
     // RPC server
